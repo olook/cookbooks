@@ -1,0 +1,6 @@
+<% (['development', 'production'] + [@environment]).uniq.each do |env| -%>
+<%= env %>:
+  uri: <%= env == 'production' ? "https://www.moip.com.br" : "https://desenvolvedor.moip.com.br/sandbox" %>
+  token: <%= @moip[:token].to_s.inspect %>
+  key: <%= @moip[:key].to_s.inspect %>
+<% end %>
