@@ -1,5 +1,7 @@
 node[:deploy].each do |application, deploy|
   deploy = node[:deploy][application]
+  Chef::Log.info("===== NODE =====: #{node.inspect}")
+  Chef::Log.info("===== DEPLOY =====: #{deploy.inspect}")
   if File.exists?("#{release_path}/public/assets/manifest.yml")
     Chef::Log.info("Assets exist. Skipping precompile")
   else
