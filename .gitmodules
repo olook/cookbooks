@@ -1,9 +1,6 @@
 [submodule "java"]
 	path = java
 	url = git@github.com:opscode-cookbooks/java.git
-[submodule "chef-newrelic"]
-	path = chef-newrelic
-	url = git@github.com:escapestudios/chef-newrelic.git
 [submodule "windows"]
 	path = windows
 	url = git@github.com:opscode-cookbooks/windows.git
