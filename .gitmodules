@@ -4,3 +4,6 @@
 [submodule "chef-newrelic"]
 	path = chef-newrelic
 	url = git@github.com:escapestudios/chef-newrelic.git
+[submodule "windows"]
+	path = windows
+	url = git@github.com:opscode-cookbooks/windows.git
