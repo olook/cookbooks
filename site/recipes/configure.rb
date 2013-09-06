@@ -13,4 +13,20 @@ node[:deploy].each do |application, deploy|
       File.exists?("#{deploy[:deploy_to]}") && File.exists?("#{deploy[:deploy_to]}/shared/config/")
     end
   end
+
+  template "#{node[:apache][:dir]}/sites-available/site.conf.d/local_proxy_stylist.conf" do
+    cookbook "site"
+    source "local_proxy_stylist.conf"
+    owner "root"
+    group "root"
+    mode 0644
+  end
+
+  template "#{node[:apache][:dir]}/sites-available/site.conf.d/local-ssl_proxy_stylist.conf" do
+    cookbook "site"
+    source "local_proxy_stylist.conf"
+    owner "root"
+    group "root"
+    mode 0644
+  end
 end
