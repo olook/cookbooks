@@ -1,4 +1,4 @@
-node[:applications].each do |app, data|
+node[:deploy].each do |app, data|
 
   pidfile = "/srv/www/#{app}/current/tmp/pids/#{app}_resque.pid"
 
