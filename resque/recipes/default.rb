@@ -26,7 +26,7 @@ node[:deploy].each do |app, data|
   end
 
   execute "enable-resque" do
-    command "update-rc.d #{app}_resque default"
+    command "update-rc.d #{app}_resque defaults"
     action :run
   end
 
