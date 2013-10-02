@@ -2,7 +2,7 @@ roles = %w[solo util]
 if roles.include?(node[:instance_role])
   node[:applications].each do |app, data|
 
-    pidfile = "/data/#{app}/current/tmp/pids/#{app}_resque.pid"
+    pidfile = "/srv/www/#{app}/current/tmp/pids/#{app}_resque.pid"
 
     template "/etc/monit.d/#{app}_resque.monitrc" do
       owner 'root'
@@ -28,13 +28,12 @@ if roles.include?(node[:instance_role])
     end
 
     execute "enable-resque" do
-      command "rc-update add #{app}_resque default"
+      command "update-rc.d #{app}_resque default"
       action :run
-      not_if "rc-update show | grep -q '^ *#{app}_resque |.*default'"
     end
 
     execute "start-resque" do
-      command %Q{/etc/init.d/#{app}_resque start}
+      command %Q{service #{app}_resque start}
       creates pidfile
     end
 
