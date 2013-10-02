@@ -16,11 +16,11 @@
 # make sure your pidfile here matches your monitrc
 app_name="<%= @app_name %>"
 pidfile="<%= @pidfile %>"
-app_dir="/data/${app_name}/current"
+app_dir="/srv/www/${app_name}/current"
 run_as_user="deploy"
 sleep_time_during_restart=5
 stop_schedule="QUIT/30/INT/10/KILL/5"
-bundler="/usr/bin/bundle"
+bundler="/usr/local/bin/bundle"
 environment="production"
 stdout_log="${app_dir}/log/resque-pool-${app_name}.stdout.log"
 stderr_log="${app_dir}/log/resque-pool-${app_name}.stderr.log"
