@@ -2,7 +2,7 @@ node[:deploy].each do |app, data|
 
   pidfile = "/srv/www/#{app}/current/tmp/pids/#{app}_resque.pid"
 
-  template "/etc/monit.d/#{app}_resque.monitrc" do
+  template "/etc/monit/conf.d/#{app}_resque.monitrc" do
     owner 'root'
     group 'root'
     mode 0644
