@@ -20,6 +20,10 @@ node[:deploy].each do |application, deploy|
     owner "root"
     group "root"
     mode 0644
+
+    only_if do
+      File.exists?("#{node[:apache][:dir]}/sites-available/site.conf.d/")
+    end
   end
 
   template "#{node[:apache][:dir]}/sites-available/site.conf.d/local-ssl_proxy_stylist.conf" do
@@ -28,5 +32,9 @@ node[:deploy].each do |application, deploy|
     owner "root"
     group "root"
     mode 0644
+
+    only_if do
+      File.exists?("#{node[:apache][:dir]}/sites-available/site.conf.d/")
+    end
   end
 end
