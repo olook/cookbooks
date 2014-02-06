@@ -4,7 +4,7 @@ node[:deploy].each do |app, data|
     owner 'root'
     group 'root'
     mode 0744
-    source "scheduler/upstart"
+    source "scheduler_upstart.erb"
     variables({
       :app_name => app
     })
