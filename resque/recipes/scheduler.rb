@@ -6,8 +6,7 @@ node[:deploy].each do |app, data|
     mode 0744
     source "upstart"
     variables({
-      :app_name => app,
-      :pidfile  => pidfile,
+      :app_name => app
     })
   end
 
