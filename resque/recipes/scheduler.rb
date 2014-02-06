@@ -11,6 +11,6 @@ node[:deploy].each do |app, data|
   end
 
   execute "start-resque-scheduler" do
-    command %Q{start #{app}_resque_scheduler}
+    command %Q{restart #{app}_resque_scheduler}
   end
 end
