@@ -31,7 +31,7 @@ node[:deploy].each do |app, data|
   end
 
   execute "start-resque" do
-    command %Q{service #{app}_resque start}
+    command %Q{service #{app}_resque restart}
     creates pidfile
   end
 
