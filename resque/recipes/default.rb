@@ -32,7 +32,6 @@ node[:deploy].each do |app, data|
 
   execute "start-resque" do
     command %Q{service #{app}_resque restart}
-    creates pidfile
   end
 
   execute "ensure-resque-is-setup-with-monit" do
