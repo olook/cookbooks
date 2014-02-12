@@ -42,69 +42,39 @@ optionsFile = node['btsync']['main_options']['settings_file_dir'] + "/" + node['
 #puts YAML::dump(nodes)
 my_shared_folders = Array.new
 if node['btsync'].has_key?('shared_folders')
-  if Chef::Config[:solo]
-    Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
-    node['btsync']['shared_folders'].each do |name,sf|
-      if node['btsync'].has_key?('known_hosts')
-        myfolder = {"name"=>name,"secret"=>sf['secret'],'dir'=>sf['path'],'sync_servers'=>node['btsync']['known_hosts']}
-        my_shared_folders << myfolder
-      end
+  node['btsync']['shared_folders'].each do |name,sf|
+    use_relay_server = sf['use_relay_server'] != nil ? sf['use_relay_server'] : node['btsync']['shared_folder_options']['use_relay_server']
+    use_tracker  = sf['use_tracker'] != nil ? sf['use_tracker'] : node['btsync']['shared_folder_options']['use_tracker']
+    use_dht = sf['use_dht'] != nil ? sf['use_dht'] : node['btsync']['shared_folder_options']['use_dht']
+    search_lan = sf['search_lan'] != nil ? sf['search_lan'] : node['btsync']['shared_folder_options']['search_lan']
+    use_sync_trash = sf['use_sync_trash'] != nil ? sf['use_sync_trash'] : node['btsync']['shared_folder_options']['use_sync_trash']
+    SyncIgnore = sf['SyncIgnore'] != nil ? sf['SyncIgnore'] : node['btsync']['shared_folder_options']['SyncIgnore']
+    directory "#{sf['dir']}" do
+      owner node['btsync']['setup']['user']
+      group node['btsync']['setup']['group']
+      mode '0777'
+      recursive true
+      action :create
     end
-  else
-    #node_search = search(:node, "btsync:shared_folders NOT name:#{node.name}")
-    node_search = search(:node, "btsync:shared_folders")
-    node['btsync']['shared_folders'].each do |name,sf|
-      
-      if node['btsync'].has_key?('known_hosts')
-        Chef::Log.info("BTSYNC options include known hosts appending them now...\n")
-
-        known_nodes = Array.new
-        node['btsync']['known_hosts'].each do |ip|
-          Chef::Log.info("Adding known host: #{ip}\n")
-          known_nodes << ip
-        end
-      else
-        Chef::Log.info("Known hosts do not exist, creating empty array set\n")
-        known_nodes = Array.new
-      end
-      node_search.each do |server|
-        if server['btsync'].has_key?('shared_folders') && server['btsync']['shared_folders'].has_key?(name) && server['btsync']['shared_folders'][name]['secret'] == sf['secret']
-          Chef::Log.info("Found additional nodes through search that match shared folder(#{name}): #{server['ipaddress']}\n")
-          known_nodes << server['ipaddress']
-        end
-      end
-      use_relay_server = sf['use_relay_server'] != nil ? sf['use_relay_server'] : node['btsync']['shared_folder_options']['use_relay_server']
-      use_tracker  = sf['use_tracker'] != nil ? sf['use_tracker'] : node['btsync']['shared_folder_options']['use_tracker']
-      use_dht = sf['use_dht'] != nil ? sf['use_dht'] : node['btsync']['shared_folder_options']['use_dht']
-      search_lan = sf['search_lan'] != nil ? sf['search_lan'] : node['btsync']['shared_folder_options']['search_lan']
-      use_sync_trash = sf['use_sync_trash'] != nil ? sf['use_sync_trash'] : node['btsync']['shared_folder_options']['use_sync_trash']
-      SyncIgnore = sf['SyncIgnore'] != nil ? sf['SyncIgnore'] : node['btsync']['shared_folder_options']['SyncIgnore']
-      directory "#{sf['dir']}" do
-        owner node['btsync']['setup']['user']
-        group node['btsync']['setup']['group']
-        mode '0775'
-        recursive true
-        action :create
-      end
-      template "#{sf['dir']}/.SyncIgnore" do
-        source "SyncIgnore.erb"
-        owner node['btsync']['setup']['user']
-        group node['btsync']['setup']['group']
-        mode "0644"
-        notifies :restart, "service[btsync]"
-        variables({:ignores => SyncIgnore})
-      end
-      Chef::Log.info("Added new shared folder: (#{name})\n")
-      my_shared_folders << {"name"=>name,"secret"=>sf['secret'],'dir'=>sf['dir'], "use_relay_server"=>use_relay_server, "use_tracker"=>use_tracker,"use_dht"=>use_dht,"search_lan"=>search_lan,"use_sync_trash"=>use_sync_trash,'sync_servers'=>known_nodes}
+    template "#{sf['dir']}/.SyncIgnore" do
+      source "SyncIgnore.erb"
+      owner node['btsync']['setup']['user']
+      group node['btsync']['setup']['group']
+      mode "0644"
+      notifies :restart, "service[btsync]"
+      variables({:ignores => SyncIgnore})
     end
+    Chef::Log.info("Added new shared folder: (#{name})\n")
+    my_shared_folders << {"name"=>name,"secret"=>sf['secret'],'dir'=>sf['dir'], "use_relay_server"=>use_relay_server,
+                          "use_tracker"=>use_tracker,"use_dht"=>use_dht,"search_lan"=>search_lan,"use_sync_trash"=>use_sync_trash,'sync_servers'=> sf['sync_servers']}
   end
 end
+
 template optionsFile do
   source "btsync-options.json.erb"
   owner node['btsync']['setup']['user']
   group node['btsync']['setup']['group']
   mode "0644"
-  notifies :restart, "service[btsync]"
   variables(
     {
       :use_relay_server => node['btsync']['shared_folder_options']['use_relay_server'],
@@ -115,6 +85,7 @@ template optionsFile do
       :sharedFolders => my_shared_folders,
     }
   )
+  notifies :restart, "service[btsync]"
 end
 
 
@@ -177,3 +148,5 @@ service 'btsync' do
   supports [:restart, :reload, :status]
   action [:enable, :restart]
 end
+
+notifies :restart, "service[btsync]", :immediately
