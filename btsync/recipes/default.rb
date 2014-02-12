@@ -175,6 +175,5 @@ service 'btsync' do
     service_name 'btsync'
   end
   supports [:restart, :reload, :status]
-  action :enable
-  action :restart
+  action [:enable, :restart]
 end
