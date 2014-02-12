@@ -122,7 +122,7 @@ end
 # Create service
 #
 template "/etc/init.d/btsync" do
-  source "init-script.sh.erb"
+  source "debian/init-script.sh.erb"
   owner node['btsync']['setup']['user']
   group node['btsync']['setup']['group']
   mode "0755"
