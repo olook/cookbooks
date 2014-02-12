@@ -176,4 +176,5 @@ service 'btsync' do
   end
   supports [:restart, :reload, :status]
   action :enable
+  action :restart
 end
