@@ -148,5 +148,3 @@ service 'btsync' do
   supports [:restart, :reload, :status]
   action [:enable, :restart]
 end
-
-notifies :restart, "service[btsync]", :immediately
