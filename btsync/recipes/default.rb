@@ -49,14 +49,14 @@ if node['btsync'].has_key?('shared_folders')
     search_lan = sf['search_lan'] != nil ? sf['search_lan'] : node['btsync']['shared_folder_options']['search_lan']
     use_sync_trash = sf['use_sync_trash'] != nil ? sf['use_sync_trash'] : node['btsync']['shared_folder_options']['use_sync_trash']
     SyncIgnore = sf['SyncIgnore'] != nil ? sf['SyncIgnore'] : node['btsync']['shared_folder_options']['SyncIgnore']
-    directory "#{sf['dir']}" do
+    directory "#{sf['path']}" do
       owner node['btsync']['setup']['user']
       group node['btsync']['setup']['group']
       mode '0777'
       recursive true
       action :create
     end
-    template "#{sf['dir']}/.SyncIgnore" do
+    template "#{sf['path']}/.SyncIgnore" do
       source "SyncIgnore.erb"
       owner node['btsync']['setup']['user']
       group node['btsync']['setup']['group']
@@ -65,7 +65,7 @@ if node['btsync'].has_key?('shared_folders')
       variables({:ignores => SyncIgnore})
     end
     Chef::Log.info("Added new shared folder: (#{name})\n")
-    my_shared_folders << {"name"=>name,"secret"=>sf['secret'],'dir'=>sf['dir'], "use_relay_server"=>use_relay_server,
+    my_shared_folders << {"name"=>name,"secret"=>sf['secret'],'dir'=>sf['path'], "use_relay_server"=>use_relay_server,
                           "use_tracker"=>use_tracker,"use_dht"=>use_dht,"search_lan"=>search_lan,"use_sync_trash"=>use_sync_trash,'sync_servers'=> sf['sync_servers']}
   end
 end
