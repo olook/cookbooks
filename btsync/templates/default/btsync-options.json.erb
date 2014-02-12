@@ -27,12 +27,12 @@
     {
         "secret" : "<%= sf['secret'] %>",
         "dir" : "<%= sf['dir'] %>",
-        "use_relay_server" : <%= sf['use_relay_server'] %>,
-        "use_tracker" : <%= sf['use_tracker'] %>,
-        "use_dht" : <%= sf['use_dht'] %>,
-        "search_lan" : <%= sf['search_lan'] %>,
-        "use_sync_trash" : <%= sf['use_sync_trash'] %>
-        <% if sf.include?("sync_servers") %>,
+        "use_relay_server" : <%= sf['use_relay_server'] || true %>,
+        "use_tracker" : <%= sf['use_tracker'] || true %>,
+        "use_dht" : <%= sf['use_dht'] || false %>,
+        "search_lan" : <%= sf['search_lan'] || true %>,
+        "use_sync_trash" : <%= sf['use_sync_trash'] || true %>
+        <% if sf.include?("sync_servers") && !sf["sync_servers"].nil? %>,
         "known_hosts" :
         [
         <% sf['sync_servers'].each do |ip| %>
