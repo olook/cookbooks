@@ -1,0 +1,53 @@
+{
+  "name": "btsync",
+  "description": "Installs/Configures btsync",
+  "long_description": "btsync Cookbook\n===============\nFast, unlimited &amp secure file-syncing.  Free from the cloud. Sync never stores your files on servers, so they stay safe from data breaches and prying eyes.\nA more detailed and in depth FAQ and documentation about bittorrent sync can be found on: http://www.bittorrent.com/sync\n\nThe btsync cookbook installs bittorrent sync and provides a simple LWRP for adding shared folders that are to be synced between multiple servers.\nWhen using a hosted chef install you will be able to use the search feature to automatically find and add additional nodes to bittorrent sync without making any modifications.\n\nRequirements\n------------\nPlease note btsync on linux requires glibc 2.3 or greater.\n\nAttributes\n----------\nTODO: Full attributes will be completed soon.\n\n#### btsync::default\n<table>\n  <tr>\n    <th>Key</th>\n    <th>Type</th>\n    <th>Description</th>\n    <th>Default</th>\n  </tr>\n  <tr>\n    <td><tt>['btsync']['setup']['user']</tt></td>\n    <td>String</td>\n    <td>The user that the btsync daemon will run as</td>\n    <td><tt>webserv</tt></td>\n  </tr>\n  <tr>\n    <td><tt>['btsync']['setup']['bin_dir']</tt></td>\n    <td>String</td>\n    <td>Where the binary will be installed to (should be in your path)</td>\n    <td><tt>/usr/local/bin/</tt></td>\n  </tr>\n</table>\n\n\nUsage\n-----\n#### btsync::default\nJust include `btsync` in your node's `run_list`:\n\n```json\n{\n  \"name\":\"my_node\",\n  \"run_list\": [\n    \"recipe[btsync::default]\"\n  ]\n}\n```\n\nThen add a path and options to your server role like so:\n\n```json\n{\n    \"name\": \"examplerole\",\n    \"chef_type\": \"role\",\n    \"json_class\": \"Chef::Role\",\n    \"description\": \"Example Role for BTSYNC\",\n    \"override_attributes\": {\n        \"btsync\":{\n            \"setup\":{\n                \"user\": \"httpd\",\n                \"group\": \"httpd\"\n            },\n            \"main_options\":{\n                \"storage_path\": \"/data/btsync\",\n                \"webui\":{\n                    \"password\": \"SomeCoolPasswordForTheUI\"\n                }\n            },\n            \"shared_folders\":{\n                \"DescriptiveNameForPathToSearchON\":{\n                    \"dir\":\"/path/to/some/directory/\",\n                    \"secret\":\"S0M3L0NGB7SYNCG3N3R4T3DS3CR37\",\n                    \"SyncIgnore\":[\".DS_Store\",\".DS_Store?\",\"._*\",\".Spotlight-V100\",\".Trashes\",\"Icon?\",\"ehthumbs.db\",\"desktop.ini\",\"Thumbs.db\",\"somefile.log\",\"logs/*\"]\n                 },\n                \"AnotherDirectoryToSync\":{\n                  \"dir\":\"/path/to/some/other/directory/\",\n                  \"secret\":\"S0M3L0NGB7SYNCG3N3R4T3DS3CR372\",\n                  \"SyncIgnore\":[\".DS_Store\",\".DS_Store?\",\"._*\",\".Spotlight-V100\",\".Trashes\",\"Icon?\",\"ehthumbs.db\",\"desktop.ini\",\"Thumbs.db\",\"somefile.log\"]\n                }\n               }\n            }\n        }\n    },\n    \"run_list\": [\n        \"recipe[btsync::default]\"\n    ]\n}\n\n```\n\nContributing\n------------\n\n1. Fork the repository on Github\n2. Create a named feature branch (like `add_component_x`)\n3. Write your change\n4. Write tests for your change (if applicable)\n5. Run the tests, ensuring they all pass\n6. Submit a Pull Request using Github\n\nLicense and Authors\n-------------------\nAuthors: Will Hattingh &amp; contributors https://github.com/Nitecon/btsync/graphs/contributors\n",
+  "maintainer": "Will Hattingh",
+  "maintainer_email": "w.hattingh@nitecon.com",
+  "license": "Apache 2.0",
+  "platforms": {
+    "amazon": ">= 0.0.0",
+    "arch": ">= 0.0.0",
+    "centos": ">= 0.0.0",
+    "debian": ">= 0.0.0",
+    "fedora": ">= 0.0.0",
+    "freebsd": ">= 0.0.0",
+    "redhat": ">= 0.0.0",
+    "scientific": ">= 0.0.0",
+    "ubuntu": ">= 0.0.0"
+  },
+  "dependencies": {
+    "partial_search": ">= 0.0.0"
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+    "btsync": {
+      "display_name": "Btsync Hash",
+      "description": "Hash of btsync attributes",
+      "type": "hash",
+      "choice": [
+
+      ],
+      "calculated": false,
+      "required": "optional",
+      "recipes": [
+
+      ]
+    }
+  },
+  "groupings": {
+  },
+  "recipes": {
+    "btsync": "Main Btsync configuration"
+  },
+  "version": "0.1.27"
+}
