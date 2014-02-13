@@ -44,7 +44,13 @@ case "$1" in
       resque-pool -d -a ${app_name} -p ${pidfile} -E ${environment} -o ${stdout_log} -e ${stderr_log}
     ;;
   reload)
-    start-stop-daemon --stop --pidfile ${pidfile} --signal HUP
+    pid=$(cat $pidfile)
+    if [ -n $(ps ${pid} | grep ${pid}) ]; then
+      start-stop-daemon --stop --pidfile ${pidfile} --signal HUP
+    else
+      echo "resque-pool not running"
+      $0 start
+    fi
     ;;
   graceful-stop)
     start-stop-daemon --stop --pidfile ${pidfile} --signal QUIT
@@ -53,7 +59,12 @@ case "$1" in
     start-stop-daemon --stop --pidfile ${pidfile} --signal INT
     ;;
   stop)
-    start-stop-daemon --stop --pidfile ${pidfile} --retry=${stop_schedule}
+    pid=$(cat $pidfile)
+    if [ -n $(ps ${pid} | grep ${pid}) ]; then
+      start-stop-daemon --stop --pidfile ${pidfile} --retry=${stop_schedule}
+    else
+      echo "resque-pool not running"
+    fi
     ;;
   restart)
     $0 stop
