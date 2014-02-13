@@ -26,6 +26,7 @@ node[:deploy].each do |app, data|
   end
 
   service "#{app}_resque" do
+    provider Chef::Provider::Service::Upstart
     start_command %Q{service #{app}_resque start}
     stop_command %Q{service #{app}_resque stop || true}
     restart_command %Q{service #{app}_resque stop || true; service #{app}_resque start}
