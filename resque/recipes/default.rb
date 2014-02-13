@@ -14,28 +14,27 @@ node[:deploy].each do |app, data|
     })
   end
 
-  template "/etc/init.d/#{app}_resque" do
+  template "/etc/init/#{app}_resque.conf" do
     owner 'root'
     group 'root'
-    mode 0744
-    source "initd.erb"
+    mode 0644
+    source "resque-pool-upstart.erb"
     variables({
       :app_name => app,
       :pidfile  => pidfile,
     })
   end
 
-  execute "enable-resque" do
-    command "update-rc.d #{app}_resque defaults"
-    action :run
-  end
-
-  execute "start-resque" do
-    command %Q{service #{app}_resque restart}
+  service "#{app}_resque" do
+    start_command %Q{service #{app}_resque start}
+    stop_command %Q{service #{app}_resque stop || true}
+    restart_command %Q{service #{app}_resque stop || true; service #{app}_resque start}
+    action [:enable, :restart]
   end
 
   execute "ensure-resque-is-setup-with-monit" do
     command %Q{monit reload}
+    action :run
   end
 
 end
