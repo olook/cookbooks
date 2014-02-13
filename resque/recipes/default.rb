@@ -18,7 +18,7 @@ node[:deploy].each do |app, data|
     owner 'root'
     group 'root'
     mode 0644
-    source "resque-pool-upstart.erb"
+    source "resque-pool-upstart.conf.erb"
     variables({
       :app_name => app,
       :pidfile  => pidfile,
