@@ -59,8 +59,8 @@ case "$1" in
     start-stop-daemon --stop --pidfile ${pidfile} --signal INT
     ;;
   stop)
-    pid=$(cat $pidfile)
-    if [ -n $(ps ${pid} | grep ${pid}) ]; then
+    pid=$([[ -a $pidfile ]] && cat $pidfile)
+    if [ -n ${pid} && -n $(ps ${pid} | grep ${pid}) ]; then
       start-stop-daemon --stop --pidfile ${pidfile} --retry=${stop_schedule}
     else
       echo "resque-pool not running"
