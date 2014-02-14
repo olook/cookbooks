@@ -1,3 +1,5 @@
+include_recipe "deploy::rails"
+
 node[:deploy].each do |application, deploy|
   Chef::Log.info("Ensuring shared/assets directory for #{application} app...")
 
