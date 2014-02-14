@@ -1,6 +1,17 @@
 node[:deploy].each do |application, deploy|
   deploy = node[:deploy][application]
 
+  deploy[:database][:adapter] = OpsWorks::RailsConfiguration.determine_database_adapter(application, deploy, "#{deploy[:deploy_to]}/current", :force => node[:force_database_adapter_detection])
+
+  template "#{deploy[:deploy_to]}/shared/config/database.yml" do
+    source "database.yml.erb"
+    cookbook 'site'
+    mode "0660"
+    group deploy[:group]
+    owner deploy[:user]
+    variables(:database => deploy[:database], :environment => deploy[:rails_env])
+  end
+
   template "#{deploy[:deploy_to]}/shared/config/moip.yml" do
     source "moip.yml.erb"
     cookbook 'site'
