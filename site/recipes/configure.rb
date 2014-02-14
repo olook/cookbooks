@@ -1,7 +1,7 @@
 node[:deploy].each do |application, deploy|
   deploy = node[:deploy][application]
 
-  deploy[:database][:adapter] = OpsWorks::RailsConfiguration.determine_database_adapter(application, deploy, "#{deploy[:deploy_to]}/current", :force => node[:force_database_adapter_detection])
+  node[:deploy][application][:database][:adapter] = OpsWorks::RailsConfiguration.determine_database_adapter(application, node[:deploy][application], "#{node[:deploy][application][:deploy_to]}/current", :force => node[:force_database_adapter_detection])
 
   template "#{deploy[:deploy_to]}/shared/config/database.yml" do
     source "database.yml.erb"
