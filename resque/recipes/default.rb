@@ -16,7 +16,7 @@ node[:deploy].each do |app, data|
   end
 
   execute "stop-resque" do
-    command %Q{service #{app}_resque stop}
+    command %Q{service #{app}_resque stop || true}
     action :run
   end
 
