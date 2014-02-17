@@ -15,13 +15,13 @@ node[:deploy].each do |app, data|
     })
   end
 
-  execute "start-resque" do
-    command %Q{service #{app}_resque start}
-    action :run
-  end
-  
   execute "stop-resque" do
     command %Q{service #{app}_resque stop}
+    action :run
+  end
+
+  execute "start-resque" do
+    command %Q{service #{app}_resque start}
     action :run
   end
 end
