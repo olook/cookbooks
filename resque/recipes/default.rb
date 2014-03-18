@@ -15,6 +15,17 @@ node[:deploy].each do |app, data|
     })
   end
 
+  template "/etc/monit/conf.d/#{app}_resque.monitrc" do
+    owner 'root'
+    group 'root'
+    mode 0644
+    source "resque-pool-monitrc.erb"
+    variables({
+      :app_name => app,
+      :pidfile  => pidfile,
+    })
+  end
+
   execute "stop-resque" do
     command %Q{service #{app}_resque stop || true}
     action :run

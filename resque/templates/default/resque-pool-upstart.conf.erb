@@ -3,28 +3,14 @@ description "<%= @app_name %> resque pool server"
 start on runlevel [2345]
 stop on runlevel [016]
 
-# not available in upstart 0.6.5
-# kill signal INT
+kill signal INT
+setuid deploy
+env RAILS_ENV=production
+expect daemon
 
 script
   cd /srv/www/<%= @app_name %>/current
-  exec sudo -u deploy /bin/bash -l -c 'cd /srv/www/<%= @app_name %>/current && RAILS_ENV=production  bundle exec resque-pool >> log/resque-pool.log 2>&1'
-end script
-
-post-start script
-  status <%= @app_name %>_resque | head -n1 | awk '{print $NF}' > <%= @pidfile %>
-end script
-
-# using pre-stop prevents restarts in upstart on ubuntu 10.04,
-# but no choice since "kill signal" not available in that ver
-# of upstart, and we need to kill INT on restart during deploy
-# so that we dont end up killing running jobs
-#
-pre-stop script
-  pid=`cat <%= @pidfile %>`
-  kill -INT $pid
-  while ps -p $pid > /dev/null; do sleep 0.1; done
-  rm -f <%= @pidfile %>
+  exec bundle exec resque-pool -d -E production -p <%= @pidfile %> -e log/resque-pool.log -o log/resque-pool.log
 end script
 
 # The pool manager responds to the following signals:
