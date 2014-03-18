@@ -8,7 +8,7 @@ expect fork
 
 script
 cd /srv/www/<%= @app_name %>/current
-exec bundle exec rake environment resque:scheduler >> log/resque-scheduler_upstart.log 2>&1
+exec bundle exec rake environment resque:scheduler >> log/resque-scheduler_upstart.log 2>&1 &
 end script
 
 post-start script
