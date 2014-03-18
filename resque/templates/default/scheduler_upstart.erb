@@ -12,9 +12,9 @@ exec bundle exec rake environment resque:scheduler >> log/resque-scheduler_upsta
 end script
 
 post-start script
-  status resque-scheduler | head -n1 | awk '{print $NF}' > /var/run/resque-scheduler.pid
+  status <%= @upstart_name %> | head -n1 | awk '{print $NF}' > <%= @pidfile %>
 end script
 
 post-stop script
-  rm -f /var/run/resque-scheduler.pid
+  rm -f <%= @pidfile %>
 end script
