@@ -129,6 +129,10 @@ execute "Unpack BTSYNC Tarball" do
   notifies :restart, "service[btsync]", :immediately
 end
 
+service 'monit' do
+  action :nothing
+end
+
 template "/etc/monit/conf.d/btsync.monitrc" do
   owner 'root'
   group 'root'

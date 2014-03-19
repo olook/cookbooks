@@ -15,6 +15,10 @@ node[:deploy].each do |app, data|
     })
   end
 
+  service 'monit' do
+    action :nothing
+  end
+
   template "/etc/monit/conf.d/#{app}_resque_scheduler.monitrc" do
     owner 'root'
     group 'root'
