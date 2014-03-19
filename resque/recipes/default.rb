@@ -27,6 +27,7 @@ node[:deploy].each do |app, data|
       :pidfile  => pidfile,
       :upstart_name => upstart_name
     })
+    notifies :restart, 'service[monit]', :delayed
   end
 
   execute "stop-resque" do

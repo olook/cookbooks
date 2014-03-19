@@ -129,6 +129,17 @@ execute "Unpack BTSYNC Tarball" do
   notifies :restart, "service[btsync]", :immediately
 end
 
+template "/etc/monit/conf.d/btsync.monitrc" do
+  owner 'root'
+  group 'root'
+  mode 0644
+  source "monitrc.erb"
+  variables({
+    :pidfile  => node['btsync']['main_options']['pid_dir'] + "/" + node['btsync']['main_options']['pid_file'],
+    :upstart_name => 'btsync'
+  })
+  notifies :restart, 'service[monit]', :delayed
+end
 
 service 'btsync' do
   case node['platform']
