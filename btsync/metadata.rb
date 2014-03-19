@@ -7,6 +7,7 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.1.27'
 recipe            'btsync', 'Main Btsync configuration'
 depends 'partial_search'
+depends 'opsworks_agent_monit'
 
 supports 'amazon'
 supports 'arch'
