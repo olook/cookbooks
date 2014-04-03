@@ -1,0 +1,9 @@
+description "statistics-api server"
+
+start on runlevel [2345]
+stop on runlevel [016]
+
+env RACK_ENV=production
+expect daemon
+chdir /srv/statistics-api/current
+exec bundle exec puma -d -e production --pidfile <%= @pidfile %> -w <%= @workers_count %> -p 80 config.ru
