@@ -31,7 +31,7 @@ end
 execute "link-current" do
   command <<-EOF
     ln -sf #{shared_path}/log #{revision_path}/log
-    ln -sf #{shared_path}/pid #{revision_path}/pid
+    ln -sf #{shared_path}/tmp #{revision_path}/tmp
     ln -sf #{revision_path} #{current_path}
   EOF
 end
