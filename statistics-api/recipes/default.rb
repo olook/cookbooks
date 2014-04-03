@@ -20,7 +20,7 @@ revision_file = "#{revision_path}.zip"
 end
 
 execute "download-source" do
-  cmd <<-EOF
+  command <<-EOF
     curl -u "#{app['github_user']}:#{app['github_pass']}" -L -o "#{revision_file}" "#{remote_source}"
   EOF
   not_if { ::File.exists?(revision_path) }
@@ -28,7 +28,7 @@ end
 
 execute "extract-and-install" do
   cwd revisions_path
-  cmd <<-EOF
+  command <<-EOF
     unzip #{revision_file}
     mv statistics-api-#{app['ref']}/* #{revision_path}
   EOF
@@ -36,7 +36,7 @@ execute "extract-and-install" do
 end
 
 execute "link-current" do
-  cmd <<-EOF
+  command <<-EOF
     ln -s #{shared_path}/log #{revision_path}/log
     ln -s #{shared_path}/pid #{revision_path}/pid
     ln -s #{revision_path} #{current_path}
@@ -52,4 +52,9 @@ template "/etc/init/statistics-api.conf" do
     :pidfile  => pidfile,
     :workers_count => 16
   })
+end
+
+service "statistics-api" do
+  supports :enable => true, :start => true, :stop => true, :restart => true
+  action [ :enable, :start ]
 end
