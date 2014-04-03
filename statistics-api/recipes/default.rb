@@ -19,10 +19,10 @@ revision_file = "#{revision_path}.zip"
   end
 end
 
-remote_file revision_file do
-  source remote_source
-  headers['Authentication'] = "Basic #{Base64.encode("#{app['github_user']}:#{app['github_pass']}")}"
-  owner 'deploy'
+execute "download-source" do
+  cmd <<-EOF
+    curl -u "#{app['github_user']}:#{app['github_pass']}" -L -o "#{revision_file}" "#{remote_source}"
+  EOF
   not_if { ::File.exists?(revision_path) }
 end
 
