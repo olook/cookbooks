@@ -28,6 +28,7 @@ template "/etc/init/statistics-api.conf" do
 end
 
 service "statistics-api" do
+  provider Chef::Provider::Service::Upstart
   supports :start => true, :stop => true, :restart => true
   action :nothing
 end

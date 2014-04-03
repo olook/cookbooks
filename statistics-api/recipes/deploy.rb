@@ -42,9 +42,11 @@ execute "bundle install" do
 end
 
 service "statistics-api" do
+  provider Chef::Provider::Service::Upstart
   action :stop
 end
 
 service "statistics-api" do
+  provider Chef::Provider::Service::Upstart
   action :start
 end
