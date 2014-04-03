@@ -1,9 +1,37 @@
-description "statistics-api server"
+# /etc/init/puma.conf - Puma config
 
-start on runlevel [2345]
-stop on runlevel [016]
+# This example config should work with Ubuntu 12.04+.  It
+# allows you to manage multiple Puma instances with
+# Upstart, Ubuntu's native service management tool.
+#
+# See workers.conf for how to manage all Puma instances at once.
+#
+# Save this config as /etc/init/puma.conf then manage puma with:
+#   sudo start puma app=PATH_TO_APP
+#   sudo stop puma app=PATH_TO_APP
+#   sudo status puma app=PATH_TO_APP
+#
+# or use the service command:
+#   sudo service puma {start,stop,restart,status}
+#
 
-env RACK_ENV=production
-expect daemon
-chdir /srv/statistics-api/current
-exec bundle exec puma -d -e production --pidfile <%= @pidfile %> -w <%= @workers_count %> -p 80 config.ru
+description "Puma Background Worker"
+
+# no "start on", we don't want to automatically start
+stop on (stopping puma-manager or runlevel [06])
+
+respawn
+respawn limit 3 30
+
+script
+# this script runs in /bin/sh by default
+# respawn as bash so we can source in rbenv/rvm
+# quoted heredoc to tell /bin/sh not to interpret
+# variables
+exec /bin/bash <<'EOT'
+  cd <%= @current_path %>
+  logger -t puma "Starting server: $app"
+
+  exec bundle exec puma -C config/puma.rb
+EOT
+end script

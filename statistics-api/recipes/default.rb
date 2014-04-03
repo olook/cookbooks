@@ -16,7 +16,7 @@ package 'unzip'
   end
 end
 
-template "/etc/init/statistics-api.conf" do
+template "/etc/init/puma.conf" do
   owner 'root'
   group 'root'
   mode 0644
@@ -25,10 +25,4 @@ template "/etc/init/statistics-api.conf" do
     :pidfile  => pidfile,
     :workers_count => 16
   })
-end
-
-service "statistics-api" do
-  provider Chef::Provider::Service::Upstart
-  supports :start => true, :stop => true, :restart => true
-  action :nothing
 end

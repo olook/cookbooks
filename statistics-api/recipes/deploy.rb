@@ -41,12 +41,8 @@ execute "bundle install" do
   command "bundle install --without=test,development"
 end
 
-service "statistics-api" do
+service "puma" do
   provider Chef::Provider::Service::Upstart
-  action :stop
-end
-
-service "statistics-api" do
-  provider Chef::Provider::Service::Upstart
-  action :start
+  supports :start => true, :stop => true, :restart => true, :status => true
+  action [:stop, :start]
 end
