@@ -1,6 +1,3 @@
-apps_root = "/srv/statistics-api"
-current_path = "#{apps_root}/current"
-
 cron "run_simple_dashboard" do
   minute "*/30"
   command "cd /srv/www/statistics_api/current && bundle exec rake map_reduce:run RACK_ENV=production"
@@ -12,6 +9,5 @@ cron "run_periodic_dashboard" do
 end
 
 execute "add_newline" do
-  cwd current_path
   command "(crontab -l ; echo "") | crontab -"
 end
