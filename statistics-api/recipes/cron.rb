@@ -8,6 +8,6 @@ cron "run_periodic_dashboard" do
   command "cd /srv/www/statistics_api/current && bundle exec rake map_reduce:run_by_period RACK_ENV=production"
 end
 
-execute "add_newline" do
-  command "(crontab -l ; echo "") | crontab -"
-end
+# execute "add_newline" do
+#   command "(crontab -l ; echo "") | crontab -"
+# end
