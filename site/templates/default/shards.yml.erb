@@ -3,11 +3,11 @@ octopus:
   <% (['production'] + [@environment]).uniq.each do |env| %>
     - <%= env %>
   <% end %>
-  replicated: <%= @database[:octopus][:replicated] ? 'true' : 'false' %>
-  fully_replicated: <%= @database[:octopus][:fully_replicated] ? 'true' : 'false' %>
+  replicated: <%= @database[:octopus][:replicated] == 'true' ? 'true' : 'false' %>
+  fully_replicated: <%= @database[:octopus][:fully_replicated] == 'true' ? 'true' : 'false' %>
 <% (['production'] + [@environment]).uniq.each do |env| -%>
   <%= env %>:
-  <% @database[:octopus][:slaves].each do |name, data| %>
+  <% @database[:octopus][:shards].each do |name, data| %>
     <%= name %>:
       adapter: <%= ( data[:adapter] || @database[:adapter] ).to_s.inspect %>
       database: <%= ( data[:database] || @database[:database] ).to_s.inspect %>
