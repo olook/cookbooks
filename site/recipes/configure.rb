@@ -13,6 +13,15 @@ node[:deploy].each do |application, deploy|
     variables(:database => database, :environment => deploy[:rails_env])
   end
 
+  template "#{deploy[:deploy_to]}/shared/config/shards.yml" do
+    source "shards.yml.erb"
+    cookbook 'site'
+    mode "0660"
+    group deploy[:group]
+    owner deploy[:user]
+    variables(:database => database, :environment => deploy[:rails_env])
+  end
+
   template "#{deploy[:deploy_to]}/shared/config/moip.yml" do
     source "moip.yml.erb"
     cookbook 'site'
@@ -20,6 +29,19 @@ node[:deploy].each do |application, deploy|
     group deploy[:group]
     owner deploy[:user]
     variables(:moip => deploy[:moip], :environment => deploy[:rails_env])
+
+    only_if do
+      File.exists?("#{deploy[:deploy_to]}") && File.exists?("#{deploy[:deploy_to]}/shared/config/")
+    end
+  end
+
+  template "#{deploy[:deploy_to]}/shared/config/redis.yml" do
+    source "redis.yml.erb"
+    cookbook 'site'
+    mode "0660"
+    group deploy[:group]
+    owner deploy[:user]
+    variables(:redis => deploy[:redis], :environment => deploy[:rails_env])
 
     only_if do
       File.exists?("#{deploy[:deploy_to]}") && File.exists?("#{deploy[:deploy_to]}/shared/config/")

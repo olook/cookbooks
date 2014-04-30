@@ -1,0 +1,26 @@
+octopus:
+  environments:
+  <% (['production'] + [@environment]).uniq.each do |env| %>
+    - <%= env %>
+  <% end %>
+  replicated: <%= @database[:octopus][:replicated] ? 'true' : 'false' %>
+  fully_replicated: <%= @database[:octopus][:fully_replicated] ? 'true' : 'false' %>
+<% (['production'] + [@environment]).uniq.each do |env| -%>
+  <%= env %>:
+  <% @database[:octopus][:slaves].each do |name, data| %>
+    <%= name %>:
+      adapter: <%= ( data[:adapter] || @database[:adapter] ).to_s.inspect %>
+      database: <%= ( data[:database] || @database[:database] ).to_s.inspect %>
+      encoding: <%= (data[:encoding] || @database[:encoding] || 'utf8').to_s.inspect %>
+      host: <%= ( data[:host] || @database[:host] || 'localhost' ).to_s.inspect %>
+      username: <%= ( data[:username] || @database[:username] ).to_s.inspect %>
+      password: <%= ( data[:password] || @database[:password] ).to_s.inspect %>
+      reconnect: <%= ( data[:reconnect] || @database[:reconnect] ) ? 'true' : 'false' %>
+  <% if data[:pool] -%>
+      pool: <%= data[:pool].to_i.inspect %>
+  <% end -%>
+  <% if data[:port] -%>
+      port: <%= data[:port].to_i.inspect %>
+  <% end -%>
+  <% end %>
+<% end %>
