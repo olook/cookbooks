@@ -7,6 +7,6 @@ node[:deploy].each do |application, deploy|
     mode "0660"
     group deploy[:group]
     owner deploy[:user]
-    variables(:app_name => deploy[:newrelic][:app_name])
+    variables(:app_name => 'Olook')
   end
 end
